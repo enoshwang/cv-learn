@@ -14,11 +14,11 @@ void colorReduce(cv::Mat image, int div);
 int main(int argc, char** argv)
 {
     // 创建一个空图像
-    //cv::Mat image(400,600,CV_8UC3,cv::Scalar(0,0,255));
+    cv::Mat image(400,600,CV_8UC3,cv::Scalar(0,0,255));
 
-    cv::Mat image = cv::imread("C:/Users/enosh/Pictures/test.jpg", cv::IMREAD_COLOR);
+    //cv::Mat image = cv::imread("C:/Users/enosh/Pictures/test.jpg", cv::IMREAD_COLOR);
 
-    colorReduce(image, 16);
+    colorReduce(image, 32);
 
     // 显示图像
     cv::imshow("Display window", image);
@@ -91,6 +91,7 @@ void colorReduce(cv::Mat image, int div)
         return;
     }
 
+    /*
     auto rows = image.rows;
     auto elementsOfRow = image.cols;
     for (int i = 0; i < rows; i++)
@@ -102,4 +103,16 @@ void colorReduce(cv::Mat image, int div)
             image.at<cv::Vec3b>(i, j)[2] = image.at<cv::Vec3b>(i, j)[2] / div * div + div / 2;
         }
     }
+    */
+
+   // 使用迭代器
+    auto it = image.begin<cv::Vec3b>();
+    auto end = image.end<cv::Vec3b>();
+    for (; it != end; ++it)
+    {
+        (*it)[0] = (*it)[0] / div * div + div / 2;
+        (*it)[1] = (*it)[1] / div * div + div / 2;
+        (*it)[2] = (*it)[2] / div * div + div / 2;
+    }
+
 }
