@@ -10,49 +10,22 @@
 void saltAndPepperNoise(cv::Mat image, int saltAndPepperPercentage);
 // 减色
 void colorReduce(cv::Mat image, int div);
+// 锐化
+void sharpen2D(cv::Mat image,cv::Mat result);
 
 int main(int argc, char** argv)
 {
     // 创建一个空图像
-    cv::Mat image(400,600,CV_8UC3,cv::Scalar(0,0,255));
+    //cv::Mat image(400,600,CV_8UC3,cv::Scalar(0,0,255));
 
-    //cv::Mat image = cv::imread("C:/Users/enosh/Pictures/test.jpg", cv::IMREAD_COLOR);
+    cv::Mat image = cv::imread("C:/Users/enosh/Pictures/test.jpg", cv::IMREAD_COLOR);
 
-    colorReduce(image, 32);
-
-    // 显示图像
-    cv::imshow("Display window", image);
-    cv::waitKey(0);
-
-    cv::imwrite("C:/Users/enosh/Pictures/test_color_reduce2.jpg", image);
-
-    return 0;
-
-    // 读取图像
-    image = cv::imread("C:/Users/enosh/Desktop/stream_media.png", cv::IMREAD_COLOR);
-    if(image.empty())
-    {
-        std::cout << "Could not open or find the image" << std::endl;
-    }
-    else
-    {
-        std::cout << "This image is " << image.rows << " x " << image.cols << std::endl;
-
-        // 显示图像
-        cv::imshow("Display window", image);
-        cv::waitKey(0);
-    }
-
-    cv::Mat result;
-    // 翻转图像
-    cv::flip(image, result, 1);
+    cv::Mat result = image.clone();
+    sharpen2D(image, result);
 
     // 显示图像
     cv::imshow("Display window", result);
     cv::waitKey(0);
-
-    // 保存图像
-    cv::imwrite("C:/Users/enosh/Desktop/stream_media_flip.png", result);
 
     return 0;
 }
@@ -115,4 +88,10 @@ void colorReduce(cv::Mat image, int div)
         (*it)[2] = (*it)[2] / div * div + div / 2;
     }
 
+}
+
+void sharpen2D(cv::Mat image, cv::Mat result)
+{
+    cv::Mat kernel = (cv::Mat_<float>(3, 3) << 0, -1, 0, -1, 5, -1, 0, -1, 0);
+    cv::filter2D(image, result, image.depth(), kernel);
 }
